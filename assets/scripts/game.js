@@ -26,22 +26,22 @@ cc.Class({
         this.blockSize = (cc.winSize.width - this.gap * (COLS + 1)) / COLS;
         let x = this.gap + this.blockSize / 2;
         let y = this.blockSize;
-        this.positions = new Array(ROWS).fill([]);
+        this.positions = new Array(ROWS);
         for (let i = 0; i < ROWS; ++i) {
+            this.positions[i] = [];
             for (let j = 0; j < COLS; ++j) {
                 let block = cc.instantiate(this.blockPrefab);
                 block.width = this.blockSize;
                 block.height = this.blockSize;
                 this.bg.addChild(block);
                 block.setPosition(cc.v2(x, y));
-                this.positions[i][j] = cc.v2(x, y);
+                this.positions[i].push(cc.v2(x, y));
                 x += this.gap + this.blockSize;
                 block.getComponent('block').setNumber(0);
             }
             y += this.gap + this.blockSize;
             x = this.gap + this.blockSize / 2;
         }
-        console.log(this.positions);
     },
 
     init() {
@@ -62,8 +62,8 @@ cc.Class({
             this.blocks[i] = [];
             this.data[i] = [];
             for (let j = 0; j < COLS; ++j) {
-                this.blocks[i][j] = null;
-                this.data[i][j] = 0;
+                this.blocks[i].push(null);
+                this.data[i].push(0);
             }
         }
         this.addBlock();
@@ -92,12 +92,9 @@ cc.Class({
     addBlock() {
         let locations = this.getEmptyLocations();
         let index = locations[Math.floor(Math.random() * locations.length)];
-        let x = Math.floor(index / ROWS);
+        let x = Math.floor(index / COLS);
         let y = Math.floor(index % COLS);
         let position = this.positions[x][y];
-        console.log(index);
-        console.log(x,y);
-        console.log(position);
         let block = cc.instantiate(this.blockPrefab);
         block.width = this.blockSize;
         block.height = this.blockSize;
