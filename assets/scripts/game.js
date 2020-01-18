@@ -153,10 +153,10 @@ cc.Class({
             for (let j = 0; j < COLS; ++j) {
                 let n = this.data[i][j];
                 if (n == 0) return false;
-                if (j > 0 && this.data[i][j-1] == n) return false;
-                if (j < COLS && this.data[i][j+1] == n) return false;
-                if (i > 0 && this.data[i-1][j] == n) return false;
-                if (i < ROWS && this.data[i+1][j] == n) return false;
+                if (j > 0 && this.data[i][j - 1] == n) return false;
+                if (j < COLS && this.data[i][j + 1] == n) return false;
+                if (i > 0 && this.data[i - 1][j] == n) return false;
+                if (i < ROWS && this.data[i + 1][j] == n) return false;
             }
         }
         return true;
@@ -168,7 +168,7 @@ cc.Class({
 
     afterMove(hasMoved) {
         if (hasMoved) {
-            this.updateScore(this.score+1);
+            this.updateScore(this.score + 1);
             this.addBlock();
         }
         if (this.checkFail()) {
@@ -198,26 +198,26 @@ cc.Class({
             if (y == 0 || this.data[x][y] == 0) {
                 callback && callback();
                 return;
-            } else if (this.data[x][y-1] == 0) {
+            } else if (this.data[x][y - 1] == 0) {
                 // 移动
                 let block = this.blocks[x][y];
-                let position = this.positions[x][y-1];
-                this.blocks[x][y-1] = block;
-                this.data[x][y-1] = this.data[x][y];
+                let position = this.positions[x][y - 1];
+                this.blocks[x][y - 1] = block;
+                this.data[x][y - 1] = this.data[x][y];
                 this.data[x][y] = 0;
                 this.blocks[x][y] = null;
                 this.doMove(block, position, () => {
-                    move(x, y-1, callback);
+                    move(x, y - 1, callback);
                 });
                 hasMoved = true;
-            } else if (this.data[x][y-1] == this.data[x][y]) {
+            } else if (this.data[x][y - 1] == this.data[x][y]) {
                 // 合并
                 let block = this.blocks[x][y];
-                let position = this.positions[x][y-1];
-                this.data[x][y-1] *= 2;
+                let position = this.positions[x][y - 1];
+                this.data[x][y - 1] *= 2;
                 this.data[x][y] = 0;
                 this.blocks[x][y] = null;
-                this.blocks[x][y-1].getComponent('block').setNumber(this.data[x][y-1]);
+                this.blocks[x][y - 1].getComponent('block').setNumber(this.data[x][y - 1]);
                 this.doMove(block, position, () => {
                     block.destroy();
                     callback && callback();
@@ -233,14 +233,14 @@ cc.Class({
         for (let i = 0; i < ROWS; ++i) {
             for (let j = 0; j < COLS; ++j) {
                 if (this.data[i][j] != 0) {
-                    toMove.push({x: i, y: j});
+                    toMove.push({ x: i, y: j });
                 }
             }
         }
 
         let counter = 0;
-        for (let i =0; i < toMove.length; ++i) {
-            move(toMove[i].x, toMove[i].y, ()=>{
+        for (let i = 0; i < toMove.length; ++i) {
+            move(toMove[i].x, toMove[i].y, () => {
                 counter++;
                 if (counter == toMove.length) {
                     this.afterMove(hasMoved);
@@ -252,29 +252,29 @@ cc.Class({
     moveRight() {
         let hasMoved = false;
         let move = (x, y, callback) => {
-            if (y == COLS -1 || this.data[x][y] == 0) {
+            if (y == COLS - 1 || this.data[x][y] == 0) {
                 callback && callback();
                 return;
-            } else if (this.data[x][y+1] == 0) {
+            } else if (this.data[x][y + 1] == 0) {
                 // 移动
                 let block = this.blocks[x][y];
-                let position = this.positions[x][y+1];
-                this.blocks[x][y+1] = block;
-                this.data[x][y+1] = this.data[x][y];
+                let position = this.positions[x][y + 1];
+                this.blocks[x][y + 1] = block;
+                this.data[x][y + 1] = this.data[x][y];
                 this.data[x][y] = 0;
                 this.blocks[x][y] = null;
                 this.doMove(block, position, () => {
-                    move(x, y+1, callback);
+                    move(x, y + 1, callback);
                 });
                 hasMoved = true;
-            } else if (this.data[x][y+1] == this.data[x][y]) {
+            } else if (this.data[x][y + 1] == this.data[x][y]) {
                 // 合并
                 let block = this.blocks[x][y];
-                let position = this.positions[x][y+1];
-                this.data[x][y+1] *= 2;
+                let position = this.positions[x][y + 1];
+                this.data[x][y + 1] *= 2;
                 this.data[x][y] = 0;
                 this.blocks[x][y] = null;
-                this.blocks[x][y+1].getComponent('block').setNumber(this.data[x][y+1]);
+                this.blocks[x][y + 1].getComponent('block').setNumber(this.data[x][y + 1]);
                 this.doMove(block, position, () => {
                     block.destroy();
                     callback && callback();
@@ -288,16 +288,16 @@ cc.Class({
 
         let toMove = [];
         for (let i = 0; i < ROWS; ++i) {
-            for (let j = COLS -1; j >= 0; --j) {
+            for (let j = COLS - 1; j >= 0; --j) {
                 if (this.data[i][j] != 0) {
-                    toMove.push({x: i, y: j});
+                    toMove.push({ x: i, y: j });
                 }
             }
         }
 
         let counter = 0;
-        for (let i =0; i < toMove.length; ++i) {
-            move(toMove[i].x, toMove[i].y, ()=>{
+        for (let i = 0; i < toMove.length; ++i) {
+            move(toMove[i].x, toMove[i].y, () => {
                 counter++;
                 if (counter == toMove.length) {
                     this.afterMove(hasMoved);
@@ -309,29 +309,29 @@ cc.Class({
     moveUp() {
         let hasMoved = false;
         let move = (x, y, callback) => {
-            if (x == ROWS -1 || this.data[x][y] == 0) {
+            if (x == ROWS - 1 || this.data[x][y] == 0) {
                 callback && callback();
                 return;
-            } else if (this.data[x+1][y] == 0) {
+            } else if (this.data[x + 1][y] == 0) {
                 // 移动
                 let block = this.blocks[x][y];
-                let position = this.positions[x+1][y];
-                this.blocks[x+1][y] = block;
-                this.data[x+1][y] = this.data[x][y];
+                let position = this.positions[x + 1][y];
+                this.blocks[x + 1][y] = block;
+                this.data[x + 1][y] = this.data[x][y];
                 this.data[x][y] = 0;
                 this.blocks[x][y] = null;
                 this.doMove(block, position, () => {
-                    move(x+1, y, callback);
+                    move(x + 1, y, callback);
                 });
                 hasMoved = true;
-            } else if (this.data[x+1][y] == this.data[x][y]) {
+            } else if (this.data[x + 1][y] == this.data[x][y]) {
                 // 合并
                 let block = this.blocks[x][y];
-                let position = this.positions[x+1][y];
-                this.data[x+1][y] *= 2;
+                let position = this.positions[x + 1][y];
+                this.data[x + 1][y] *= 2;
                 this.data[x][y] = 0;
                 this.blocks[x][y] = null;
-                this.blocks[x+1][y].getComponent('block').setNumber(this.data[x+1][y]);
+                this.blocks[x + 1][y].getComponent('block').setNumber(this.data[x + 1][y]);
                 this.doMove(block, position, () => {
                     block.destroy();
                     callback && callback();
@@ -347,14 +347,14 @@ cc.Class({
         for (let i = ROWS - 1; i >= 0; --i) {
             for (let j = 0; j < COLS; ++j) {
                 if (this.data[i][j] != 0) {
-                    toMove.push({x: i, y: j});
+                    toMove.push({ x: i, y: j });
                 }
             }
         }
 
         let counter = 0;
-        for (let i =0; i < toMove.length; ++i) {
-            move(toMove[i].x, toMove[i].y, ()=>{
+        for (let i = 0; i < toMove.length; ++i) {
+            move(toMove[i].x, toMove[i].y, () => {
                 counter++;
                 if (counter == toMove.length) {
                     this.afterMove(hasMoved);
@@ -369,26 +369,26 @@ cc.Class({
             if (x == 0 || this.data[x][y] == 0) {
                 callback && callback();
                 return;
-            } else if (this.data[x-1][y] == 0) {
+            } else if (this.data[x - 1][y] == 0) {
                 // 移动
                 let block = this.blocks[x][y];
-                let position = this.positions[x-1][y];
-                this.blocks[x-1][y] = block;
-                this.data[x-1][y] = this.data[x][y];
+                let position = this.positions[x - 1][y];
+                this.blocks[x - 1][y] = block;
+                this.data[x - 1][y] = this.data[x][y];
                 this.data[x][y] = 0;
                 this.blocks[x][y] = null;
                 this.doMove(block, position, () => {
-                    move(x-1, y, callback);
+                    move(x - 1, y, callback);
                 });
                 hasMoved = true;
-            } else if (this.data[x-1][y] == this.data[x][y]) {
+            } else if (this.data[x - 1][y] == this.data[x][y]) {
                 // 合并
                 let block = this.blocks[x][y];
-                let position = this.positions[x-1][y];
-                this.data[x-1][y] *= 2;
+                let position = this.positions[x - 1][y];
+                this.data[x - 1][y] *= 2;
                 this.data[x][y] = 0;
                 this.blocks[x][y] = null;
-                this.blocks[x-1][y].getComponent('block').setNumber(this.data[x-1][y]);
+                this.blocks[x - 1][y].getComponent('block').setNumber(this.data[x - 1][y]);
                 this.doMove(block, position, () => {
                     block.destroy();
                     callback && callback();
@@ -404,14 +404,14 @@ cc.Class({
         for (let i = 0; i < ROWS; ++i) {
             for (let j = 0; j < COLS; ++j) {
                 if (this.data[i][j] != 0) {
-                    toMove.push({x: i, y: j});
+                    toMove.push({ x: i, y: j });
                 }
             }
         }
 
         let counter = 0;
-        for (let i =0; i < toMove.length; ++i) {
-            move(toMove[i].x, toMove[i].y, ()=>{
+        for (let i = 0; i < toMove.length; ++i) {
+            move(toMove[i].x, toMove[i].y, () => {
                 counter++;
                 if (counter == toMove.length) {
                     this.afterMove(hasMoved);
