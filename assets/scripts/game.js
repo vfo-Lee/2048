@@ -1,5 +1,5 @@
-const ROWS = 4; // 行数，y的最大值
-const COLS = 5; // 列数，x的最大值
+let ROWS = 3; // 行数，y的最大值
+let COLS = 3; // 列数，x的最大值
 const NUMBERS = [2, 4]; // 随机生成的数字
 const VEC_LENGTH = 100; // 最小移动长度
 const MOVE_DURATIOH = 0.1; // 移动的时长
@@ -13,20 +13,28 @@ cc.Class({
         blockPrefab: cc.Prefab,
         gap: 20,
         bg: cc.Node,
+        startPanel: cc.Node,
+        RowBox: cc.EditBox,
+        ColBox: cc.EditBox,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {},
 
-    start() {
-        this.drawBgBlocks();
-        this.init();
-        this.addEventHandler();
+    onStartGame() {
+        ROWS = Math.floor(this.RowBox.string);
+        COLS = Math.floor(this.ColBox.string);
+        if (ROWS >= 3 && ROWS <= 8 && COLS >= 3 && COLS <= 8) {
+            this.startPanel.destroy();
+            this.drawBgBlocks();
+            this.init();
+            this.addEventHandler();
+        }
     },
 
     drawBgBlocks() {
-        this.blockSize = (cc.winSize.width - this.gap * (COLS + 1)) / COLS;
+        this.blockSize = (cc.winSize.width - this.gap * (Math.max(ROWS, COLS) + 1)) / Math.max(ROWS, COLS);
         let x = this.gap + this.blockSize / 2;
         let y = this.blockSize;
         this.positions = new Array(ROWS);
@@ -145,6 +153,23 @@ cc.Class({
                     this.moveDown();
                 }
             }
+        }
+    },
+
+    KeyDown(event) {
+        switch(event.keyCode) {
+            case cc.macro.KEY.up:
+                this.moveUp;
+                break;
+            case cc.macro.KEY.down:
+                this.moveDown;
+                break;
+            case cc.macro.KEY.left:
+                this.moveLeft;
+                break;
+            case cc.macro.KEY.right:
+                this.moveRight;
+                break;
         }
     },
 
