@@ -1,7 +1,7 @@
 let ROWS = 3; // 行数，y的最大值
 let COLS = 3; // 列数，x的最大值
 const NUMBERS = [2, 4]; // 随机生成的数字
-const VEC_LENGTH = 100; // 最小移动长度
+const VEC_LENGTH = 200; // 最小移动长度
 const MOVE_DURATIOH = 0.1; // 移动的时长
 
 cc.Class({
@@ -16,6 +16,7 @@ cc.Class({
         startPanel: cc.Node,
         RowBox: cc.EditBox,
         ColBox: cc.EditBox,
+        endPanel: cc.Node,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -23,10 +24,11 @@ cc.Class({
     // onLoad () {},
 
     onStartGame() {
+        this.endPanel.active = false;
         ROWS = Math.floor(this.RowBox.string);
         COLS = Math.floor(this.ColBox.string);
-        if (ROWS >= 3 && ROWS <= 8 && COLS >= 3 && COLS <= 8) {
-            this.startPanel.destroy();
+        if (ROWS >= 2 && ROWS <= 8 && COLS >= 2 && COLS <= 8) {
+            this.startPanel.active = false;
             this.drawBgBlocks();
             this.init();
             this.addEventHandler();
@@ -57,18 +59,18 @@ cc.Class({
 
     init() {
         this.updateScore(0);
-        if (this.blocks) {
-            for (let i = 0; i < ROWS; ++i) {
-                for (let j = 0; j < COLS; ++j) {
-                    if (this.blocks[i][j] != null) {
-                        this.blocks[i][j].destroy();
-                    }
-                }
-            }
-        }
+        // if (this.blocks) {
+        //     for (let i = 0; i < ROWS; ++i) {
+        //         for (let j = 0; j < COLS; ++j) {
+        //             if (this.blocks[i][j] != null) {
+        //                 this.blocks[i][j].destroy();
+        //             }
+        //         }
+        //     }
+        // }
 
-        this.data = [];
-        this.blocks = [];
+        this.data = new Array(ROWS);
+        this.blocks = new Array(ROWS);
         for (let i = 0; i < ROWS; ++i) {
             this.blocks[i] = [];
             this.data[i] = [];
@@ -156,39 +158,28 @@ cc.Class({
         }
     },
 
-    KeyDown(event) {
-        switch(event.keyCode) {
-            case cc.macro.KEY.up:
-                this.moveUp;
-                break;
-            case cc.macro.KEY.down:
-                this.moveDown;
-                break;
-            case cc.macro.KEY.left:
-                this.moveLeft;
-                break;
-            case cc.macro.KEY.right:
-                this.moveRight;
-                break;
-        }
-    },
-
     checkFail() {
         for (let i = 0; i < ROWS; ++i) {
             for (let j = 0; j < COLS; ++j) {
                 let n = this.data[i][j];
                 if (n == 0) return false;
                 if (j > 0 && this.data[i][j - 1] == n) return false;
-                if (j < COLS && this.data[i][j + 1] == n) return false;
+                if (j < COLS - 1 && this.data[i][j + 1] == n) return false;
                 if (i > 0 && this.data[i - 1][j] == n) return false;
-                if (i < ROWS && this.data[i + 1][j] == n) return false;
+                if (i < ROWS - 1 && this.data[i + 1][j] == n) return false;
             }
         }
         return true;
     },
 
     gameOver() {
+        this.endPanel.active = true;
+    },
 
+    reSet() {
+        this.bg.destroyAllChildren();
+        this.endPanel.active = false;
+        this.startPanel.active = true;
     },
 
     afterMove(hasMoved) {
